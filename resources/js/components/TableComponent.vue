@@ -3,25 +3,27 @@
   <thead>
     <tr>
       <th>Id</th>
-      <th>Name</th>
+      <th>Namesssss</th>
       <th>Email</th>
       <th>Created At</th>
       <th>Actions</th>
     </tr>
   </thead>
   <tbody>
-    <tr v-for="user in users" :key="user.id">
+    
+    <tr v-for="(user, index) in users">
       <th scope="row">{{ user.id }}</th>
       <td>{{ user.name }}</td>
       <td>{{ user.email }}</td>
       <td>{{ user.created_at }}</td>
       <td>
-          <a href="#" class="btn btn-info btn-sm">Edit</a>
-          <button 
-          class="btn btn-danger btn-sm"
-          v-on:click="deleteUser(user.id)">
-                del
-              <!-- <i class="fa fa-trash"></i> -->
+           <button class="btn btn-info">
+              <i class="fas fa-pencil-alt"></i>
+          </button>
+
+          <button class="btn btn-danger"
+          v-on:click="deleteUser(index)">
+              <i class="fas fa-trash-alt"></i>
           </button>
           
       </td>
@@ -55,12 +57,30 @@
                    this.mytable();
                });
            },
-           deleteUser(id){
-               //this.users.$remove(user)
-               this.users.splice(id, 1);
-               axios.delete('users/'+ id).then(response=>{
-                   console.log(response.data.msg)
-               })
+           
+           deleteUser(index){
+               Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                if (result.value) {                   
+                    this.$delete(this.users, index);
+                   
+                   axios.delete('users/'+ user.id).then(response=>{
+                    
+                    Swal.fire(
+                    'Deleted!',
+                    response.data.msg,
+                    'success'
+                    )
+                  })
+                }
+                })
            } 
         }
     }
